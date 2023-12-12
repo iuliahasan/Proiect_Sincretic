@@ -40,64 +40,16 @@ void Afisare(int Sah[][100], int n)
 //Verificam daca putem plasa turnul pe tabla de sah.
 int Validare(int Sah[][100], int n, int rand, int coloana)
 {
-    int i, j;
-    
-    //Verificam randul in stanga
-    for(i=0; i<coloana; i++)
+    int i;
+
+    for(i=0; i<n; i++)
     {
-        if(Sah[rand][i])
+        if(Sah[i][coloana] && i!=rand)
         {
             return 0;
         }
-    }
 
-    //Verificam coloana de sus
-    for(i=rand-1; i>=0; i--)
-    {
-        if(Sah[i][coloana])
-        {
-            return 0;
-        }
-    }
-
-    //Verificam coloana de jos
-    for(i=rand+1; i<n; i++)
-    {
-        if(Sah[i][coloana])
-        {
-            return 0;
-        }
-    }
-
-    //Verificam diagonala de sus in stanga
-    for(i=rand-1, j=coloana-1; i>=0 && j>=0; i--, j--)
-    {
-        if(Sah[i][j])
-        {
-            return 0;
-        }
-    }
-
-    //Verificam diagonala de jos in stanga
-    for(i=rand+1, j=coloana-1; i<n && j>=0; i++, j--)
-    {
-        if(Sah[i][j])
-        {
-            return 0;
-        }
-    }
-
-    //Verificam diagonala de sus in dreapta
-    for(i=rand-1, j=coloana+1; i>=0 && j<n; i--, j++)
-    {
-        if(Sah[i][j])
-         return 0;
-    }
-
-    //Verificam diagonala de jos in dreapta
-    for(i=rand+1, j=coloana+1; i<n && j<n; i++, j++)
-    {
-        if(Sah[i][j])
+        if(Sah[rand][i] && i!=coloana)
         {
             return 0;
         }
@@ -113,6 +65,21 @@ int Solutie(int Sah[][100], int n, int coloana)
     {
         return 1;
     }
+
+    for(i=0; i<n; i++)
+    {
+        if(Validare(Sah,n,i,coloana))
+        {
+            Sah[i][coloana]=1;
+
+            if(Solutie(Sah,n,coloana+1))
+            {
+                return 1;
+            }
+            Sah[i][coloana]=0;
+        }
+    }
+    return 0;
 }
 
 //Functia principala
@@ -121,5 +88,15 @@ int main()
     int n, Sah[100][100];
     cout<<"Introduceti numarul turnurilor pe care doriti sa le introduceti: ";
     cin>>n;
+
+    if(Solutie(Sah,n,0)==0)
+    {
+        cout<<"Nu exista nicio solutie! "<<endl;
+    }
+    else
+    {
+        cout<<"Solutia este: "<<endl;
+        Afisare(Sah,n);
+    }
     return 0;
 }
